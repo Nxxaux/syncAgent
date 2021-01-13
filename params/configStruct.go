@@ -3,10 +3,10 @@ package params
 import "time"
 
 //DeviceIDLength for DeviceID
-const DeviceIDLength = 32
+//const DeviceIDLength = 32
 
 //DeviceID in DeviceConfiguration
-type DeviceID [DeviceIDLength]byte
+//type DeviceID [DeviceIDLength]byte
 
 //GUIConfiguration for GUI
 type GUIConfiguration struct {
@@ -15,7 +15,7 @@ type GUIConfiguration struct {
 	RawUnixSocketPermissions  string `json:"unixSocketPermissions" xml:"unixSocketPermissions,omitempty"`
 	User                      string `json:"user" xml:"user,omitempty"`
 	Password                  string `json:"password" xml:"password,omitempty"`
-	AuthMode                  int32  `json:"authMode" xml:"authMode,omitempty"`
+	AuthMode                  string `json:"authMode" xml:"authMode,omitempty"`
 	RawUseTLS                 bool   `json:"useTLS" xml:"tls,attr"`
 	APIKey                    string `json:"apiKey" xml:"apikey,omitempty"`
 	InsecureAdminAccess       bool   `json:"insecureAdminAccess" xml:"insecureAdminAccess,omitempty"`
@@ -34,14 +34,14 @@ type ObservedFolder struct {
 
 //DeviceConfiguration here
 type DeviceConfiguration struct {
-	DeviceID                 DeviceID         `json:"deviceID" xml:"id,attr"`
+	DeviceID                 string           `json:"deviceID" xml:"id,attr"`
 	Name                     string           `json:"name" xml:"name,attr,omitempty"`
 	Addresses                []string         `json:"addresses" xml:"address,omitempty" default:"dynamic"`
-	Compression              int32            `json:"compression" xml:"compression,attr"`
+	Compression              string           `json:"compression" xml:"compression,attr"`
 	CertName                 string           `json:"certName" xml:"certName,attr,omitempty"`
 	Introducer               bool             `json:"introducer" xml:"introducer,attr"`
 	SkipIntroductionRemovals bool             `json:"skipIntroductionRemovals" xml:"skipIntroductionRemovals,attr"`
-	IntroducedBy             DeviceID         `json:"introducedBy" xml:"introducedBy,attr"`
+	IntroducedBy             string           `json:"introducedBy" xml:"introducedBy,attr"`
 	Paused                   bool             `json:"paused" xml:"paused"`
 	AllowedNetworks          []string         `json:"allowedNetworks" xml:"allowedNetwork,omitempty"`
 	AutoAcceptFolders        bool             `json:"autoAcceptFolders" xml:"autoAcceptFolders"`
@@ -78,9 +78,9 @@ type VersioningConfiguration struct {
 type FolderConfiguration struct {
 	ID                      string                      `json:"id" xml:"id,attr"`
 	Label                   string                      `json:"label" xml:"label,attr" restart:"false"`
-	FilesystemType          int32                       `json:"filesystemType" xml:"filesystemType"`
+	FilesystemType          string                      `json:"filesystemType" xml:"filesystemType"`
 	Path                    string                      `json:"path" xml:"path,attr"`
-	Type                    int32                       `json:"type" xml:"type,attr"`
+	Type                    string                      `json:"type" xml:"type,attr"`
 	Devices                 []FolderDeviceConfiguration `json:"devices" xml:"device"`
 	RescanIntervalS         int                         `json:"rescanIntervalS" xml:"rescanIntervalS,attr" default:"3600"`
 	FSWatcherEnabled        bool                        `json:"fsWatcherEnabled" xml:"fsWatcherEnabled,attr" default:"true"`
@@ -92,7 +92,7 @@ type FolderConfiguration struct {
 	Copiers                 int                         `json:"copiers" xml:"copiers"`
 	PullerMaxPendingKiB     int                         `json:"pullerMaxPendingKiB" xml:"pullerMaxPendingKiB"`
 	Hashers                 int                         `json:"hashers" xml:"hashers"`
-	Order                   int32                       `json:"order" xml:"order"`
+	Order                   string                      `json:"order" xml:"order"`
 	IgnoreDelete            bool                        `json:"ignoreDelete" xml:"ignoreDelete"`
 	ScanProgressIntervalS   int                         `json:"scanProgressIntervalS" xml:"scanProgressIntervalS"`
 	PullerPauseS            int                         `json:"pullerPauseS" xml:"pullerPauseS"`
@@ -106,8 +106,8 @@ type FolderConfiguration struct {
 	RawModTimeWindowS       int                         `json:"modTimeWindowS" xml:"modTimeWindowS"`
 	MaxConcurrentWrites     int                         `json:"maxConcurrentWrites" xml:"maxConcurrentWrites" default:"2"`
 	DisableFsync            bool                        `json:"disableFsync" xml:"disableFsync"`
-	BlockPullOrder          int32                       `json:"blockPullOrder" xml:"blockPullOrder"`
-	CopyRangeMethod         int32                       `json:"copyRangeMethod" xml:"copyRangeMethod" default:"standard"`
+	BlockPullOrder          string                      `json:"blockPullOrder" xml:"blockPullOrder"`
+	CopyRangeMethod         string                      `json:"copyRangeMethod" xml:"copyRangeMethod" default:"standard"`
 	CaseSensitiveFS         bool                        `json:"caseSensitiveFS" xml:"caseSensitiveFS"`
 	JunctionsAsDirs         bool                        `json:"junctionsAsDirs" xml:"junctionsAsDirs"`
 	// Legacy deprecated
@@ -120,7 +120,7 @@ type FolderConfiguration struct {
 type LDAPConfiguration struct {
 	Address            string `json:"address" xml:"address,omitempty"`
 	BindDN             string `json:"bindDN" xml:"bindDN,omitempty"`
-	Transport          int32  `json:"transport" xml:"transport,omitempty"`
+	Transport          string `json:"transport" xml:"transport,omitempty"`
 	InsecureSkipVerify bool   `json:"insecureSkipVerify" xml:"insecureSkipVerify,omitempty" default:"false"`
 	SearchBaseDN       string `json:"searchBaseDN" xml:"searchBaseDN,omitempty"`
 	SearchFilter       string `json:"searchFilter" xml:"searchFilter,omitempty"`
@@ -172,7 +172,7 @@ type OptionsConfiguration struct {
 	StunKeepaliveStartS     int      `json:"stunKeepaliveStartS" xml:"stunKeepaliveStartS" default:"180"`
 	StunKeepaliveMinS       int      `json:"stunKeepaliveMinS" xml:"stunKeepaliveMinS" default:"20"`
 	RawStunServers          []string `json:"stunServers" xml:"stunServer" default:"default"`
-	DatabaseTuning          int32    `json:"databaseTuning" xml:"databaseTuning" restart:"true"`
+	DatabaseTuning          string   `json:"databaseTuning" xml:"databaseTuning" restart:"true"`
 	RawMaxCIRequestKiB      int      `json:"maxConcurrentIncomingRequestKiB" xml:"maxConcurrentIncomingRequestKiB"`
 	AnnounceLANAddresses    bool     `json:"announceLANAddresses" xml:"announceLANAddresses" default:"true"`
 	SendFullIndexOnUpgrade  bool     `json:"sendFullIndexOnUpgrade" xml:"sendFullIndexOnUpgrade"`
@@ -190,7 +190,7 @@ type OptionsConfiguration struct {
 //ObservedDevice in Configuration
 type ObservedDevice struct {
 	Time    time.Time `json:"time" xml:"time,attr"`
-	ID      DeviceID  `json:"deviceID" xml:"id,attr"`
+	ID      string    `json:"deviceID" xml:"id,attr"`
 	Name    string    `json:"name" xml:"name,attr"`
 	Address string    `json:"address" xml:"address,attr"`
 }

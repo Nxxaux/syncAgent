@@ -1,5 +1,25 @@
 package main
 
+import (
+	"log"
+	"syncAgent-go/syncAgent/httprequest"
+)
+
+func init() {
+	//初始化CSRF + deviceID
+	err := httprequest.CSRF()
+	if err != nil {
+		log.Println(err.Error())
+		return
+	}
+	//初始化globleConfig
+	err = httprequest.GlobleConfigLoad()
+	if err != nil {
+		log.Println(err.Error())
+		return
+	}
+}
+
 func main() {
 	/*---------------------------------------------
 	初始化

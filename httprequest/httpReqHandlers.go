@@ -1,10 +1,9 @@
 package httprequest
 
 import (
-	"encoding/json"
+	"bytes"
 	"io/ioutil"
 	"net/http"
-	"strings"
 	"syncAgent-go/syncAgent/params"
 )
 
@@ -32,52 +31,20 @@ func Get(url string) ([]byte, error) {
 	return d, nil
 }
 
-//获取随机的folderID
-func randomFolderID() (string, error) {
-	d, err := Get(params.TryRandomFolderID)
+//PUT url request to syncthing
+func PUT(url string, d []byte) error {
+	body := bytes.NewBuffer(d)
+	req, err := http.NewRequest("PUT", url, body)
 	if err != nil {
-		return "", err
+		return err //log
 	}
-	//添加之后访问添加文件夹
-	FolderID := func(d []byte) string {
-		f := params.FolderIDRandom{}
-		err := json.Unmarshal(d, &f)
-		if err != nil {
-			//shuold not happen
-			return "" //log
-		}
-		sl := strings.ToLower(string(f.Random))
-		s1 := sl[:5]
-		s2 := sl[5:]
-		s3 := s1 + "-" + s2
-
-		return s3
-	}(d)
-	return FolderID, nil
-}
-
-//CSRF GET 请求并返回结果cookie
-/*
-url： 地址
-flag：
-0 默认从文件获取
-1 从syncthing 服务器获取
-*/
-func CSRF() (bool, error) {
-	var csrf string
-	sa, err := readCsrfRecord()
+	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("X-CSRF-Token-UE2TW", params.CSRF)
+	res, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return false, err //log
+		return err //log
 	}
-	csrf = sa
-	ok, err := csrfVarify(params.TryERR, csrf)
-	if !ok {
-		sb, err := csrfGet()
-		if err != nil {
-			return false, err //log
-		}
-		csrf = sb
-	}
-	params.CSRF = csrf
-	return true, nil
+	defer res.Body.Close()
+
+	return nil
 }
